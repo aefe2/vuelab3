@@ -1,0 +1,217 @@
+* {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    height: 100vh;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+    align-items: start;
+    justify-content: space-evenly;
+    padding-top: 40px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    border: rgba(0, 0, 0, 0.26) 1px solid;
+    box-shadow: inset rgba(0, 0, 0, 0.2);
+    border-radius: 30px;
+    min-width: 100px;
+}
+
+.column1 {
+    order: 1;
+}
+
+.column2 {
+    order: 2;
+}
+
+.column3 {
+    order: 3;
+}
+
+li {
+    list-style: none;
+}
+
+.none {
+    display: none;
+}
+
+.btn-task-add {
+    width: 18px;
+}
+
+.todo-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border: 1px solid #808080;
+    border-radius: 15px;
+    /*box-shadow: aqua inset 0 0 10px;*/
+    box-shadow: inset rgba(170, 0, 255, 0.29) 0 0 10px;
+    padding: 20px;
+    margin: 10px;
+}
+
+.create-form {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.create-form > input {
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #808080;
+}
+
+.create-form > button {
+    margin-top: 10px;
+    padding: 5px;
+    border-radius: 20px;
+    border: 1px solid #808080;
+    background-color: whitesmoke;
+}
+
+.create-form > input[type="submit"]:hover {
+    background-color: rgba(170, 0, 255, 0.29);
+    transition-duration: .3s;
+}
+
+.create-form label {
+    text-shadow: #aa00ff 0 0 15px;
+}
+
+.delete-btn {
+    margin-top: 10px;
+    padding: 5px;
+    border-radius: 20px;
+    border: 1px solid #808080;
+    background-color: whitesmoke;
+}
+
+.delete-btn:hover {
+    color: red;
+    background-color: rgba(199, 197, 197, 0.29);
+}
+
+form > input {
+    margin-top: 10px;
+}
+
+.task-count-label {
+    margin-top: 10px;
+}
+
+.todo-title {
+    word-break: break-word;
+    font-weight: 700;
+}
+
+.todo-tasks {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.todo-tasks > span {
+    margin-top: 10px;
+}
+
+.task-title-input {
+    border-radius: 20px;
+    border: 1px solid #808080;
+    padding: 5px;
+    width: 120px;
+    margin-right: 5px;
+}
+
+.submit-btn {
+    border-radius: 20px;
+    border: 1px solid #808080;
+    background-color: whitesmoke;
+    width: 20px;
+}
+
+.submit-btn:hover {
+    background-color: rgba(170, 0, 255, 0.29);
+    transition-duration: .3s;
+}
+
+.add-task-form {
+    display: flex;
+}
+
+.task {
+    display: flex;
+    align-items: center;
+    margin: 5px 10px 5px 5px;
+
+}
+
+.task-title {
+    margin: 0 10px 0 0;
+    word-break: break-word;
+
+}
+
+.done-btn {
+    background-color: whitesmoke;
+    margin-right: auto;
+    border-radius: 20px;
+    border: 1px solid #808080;
+    padding: 5px;
+}
+
+.done-btn:disabled {
+    border: 1px solid rgba(128, 128, 128, 0.39);
+}
+
+.done-btn:disabled:hover {
+    background-color: #f5f5f5;
+    border-color: #c9c9c9;
+}
+
+.done-btn:hover {
+    transition-duration: .3s;
+    margin-right: auto;
+    border-radius: 20px;
+    border: 1px solid #808080;
+    padding: 5px;
+    background-color: rgba(27, 253, 1, 0.29);
+}
+
+.date {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 10px;
+    border: 1px solid grey;
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: inset rgba(204, 204, 203, 0.25) 0 0 10px;
+}
+
+.disabled:before {
+    transition-duration: 1.5s;
+    content: 'locked for editing';
+    color: rgba(232, 12, 12, 0.82);
+    margin: auto;
+}
+
+.disabled {
+    transition-duration: 1s;
+    box-shadow: inset rgba(232, 12, 12, 0.82) 0 0 30px;
+    pointer-events: none;
+}
