@@ -15,11 +15,6 @@ Vue.component('container', {
         //     localStorage.secondCol = JSON.stringify(this.secondCol)
         //     localStorage.thirdCol = JSON.stringify(this.thirdCol)
         // },
-        // time(idNote) {
-        //     let timeData = new Date();
-        //     this.secondCol[idNote].time = timeData.getHours() + ':' + timeData.getMinutes();
-        //     this.secondCol[idNote].date = timeData.getDate() + '.' + timeData.getMonth() + '.' + timeData.getFullYear();
-        // },
     },
     mounted() {
         eventBus.$on('delete-note', (idNote) => {
@@ -74,6 +69,9 @@ Vue.component('column1', {
             type: Array,
             required: true
         },
+        idCol: {
+            type: Number
+        }
     },
     data() {
         return {}
@@ -201,7 +199,7 @@ Vue.component('note', {
         }
     },
     mounted() {
-        
+
     },
     template: `
     <div class="todo-card todo-item">
@@ -215,10 +213,27 @@ Vue.component('note', {
             <span>Date - {{ note.date }}</span>
             <span>Time - {{ note.time }}</span>
         </div>
+        <div class="deadline">
+            <span>Date - {{ note.deadlineDate }}</span>
+            <span>Time - {{ note.deadlineTime }}</span>
+        </div>
         <div class="delete-block">
             <button @click="deleteNote(idNote)">Delete</button>
         </div>
     </div>`,
+})
+
+Vue.component('edit-note', {
+    props: {},
+    data() {
+        return {}
+    },
+    methods: {},
+    mounted() {
+    },
+    template: `
+        
+    `,
 })
 
 // Vue.component('task', {
@@ -260,6 +275,8 @@ Vue.component('create-form', {
             taskTitle: null,
             date: null,
             time: null,
+            deadlineDate: null,
+            deadlineTime: null
         };
     },
     methods: {
@@ -270,7 +287,9 @@ Vue.component('create-form', {
                     title: this.title,
                     taskTitle: this.taskTitle,
                     time: timeData.getHours() + ':' + timeData.getMinutes(),
-                    date: timeData.getDate() + '.' + timeData.getMonth() + '.' + timeData.getFullYear()
+                    date: timeData.getFullYear() + '-' + Number(timeData.getMonth() + 1) + '-' + timeData.getDate(),
+                    deadlineDate: this.deadlineDate,
+                    deadlineTime: this.deadlineTime
                 }
                 eventBus.$emit('on-submit', createNote);
                 this.title = '';
@@ -283,6 +302,11 @@ Vue.component('create-form', {
         <label>Create Todo</label>
         <input v-model="title" type="text" placeholder="title">
         <input v-model="taskTitle" type="text" placeholder="description">
+        <span>Deadline</span>
+        <div class="date-input">
+            <input type="date" v-model="deadlineDate">
+            <input type="time" v-model="deadlineTime">
+        </div>
         <input type="submit" value="Create">
     </form>
     `,

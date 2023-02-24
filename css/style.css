@@ -231,3 +231,30 @@ form > input {
     box-shadow: inset rgba(232, 12, 12, 0.82) 0 0 30px;
     pointer-events: none;
 }
+
+.create-form > span {
+    margin-top: 10px;
+}
+
+.date-input {
+    display: flex;
+    margin-top: 10px;
+}
+
+.date-input > input {
+    border-radius: 20px;
+    border: 1px solid #808080;
+    padding: 10px;
+    margin-right: 5px;
+}
+
+.deadline {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 10px;
+    border: 1px solid grey;
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: inset rgba(255, 77, 0, 0.54) 0 0 10px;
+}
