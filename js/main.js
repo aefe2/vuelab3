@@ -22,6 +22,9 @@ Vue.component('container', {
         // },
     },
     mounted() {
+        eventBus.$on('delete-note', (idNote) => {
+            this.firstCol.splice(idNote, 1)
+        })
         // if (localStorage.firstCol) {
         //     this.firstCol = JSON.parse(localStorage.firstCol)
         // }
@@ -56,7 +59,7 @@ Vue.component('container', {
     <div>
         <create-form></create-form>
         <div class="container">
-            <column1 class="column column1" :firstCol="firstCol"></column1>
+            <column1 class="column column1" :idCol="0" :firstCol="firstCol"></column1>
             <column2 class="column column2" :secondCol="secondCol"></column2>
             <column3 class="column column3" :thirdCol="thirdCol"></column3>
             <column4 class="column column4" :fourthCol="fourthCol"></column4>
@@ -181,6 +184,9 @@ Vue.component('note', {
         idNote: {
             type: Number,
         },
+        idCol: {
+            type: Number
+        }
     },
     data() {
         return {
@@ -190,35 +196,12 @@ Vue.component('note', {
         }
     },
     methods: {
-        // addTask() {
-        //     if (this.taskTitle && this.note.tasks.length < 5) {
-        //         let createTask = {
-        //             taskTitle: this.taskTitle,
-        //             isDone: false
-        //         }
-        //         this.note.tasks.push(createTask);
-        //         this.taskTitle = '';
-        //         this.$emit('save')
-        //     }
-        // },
+        deleteNote(idNote) {
+            eventBus.$emit('delete-note', idNote)
+        }
     },
     mounted() {
-        // eventBus.$on('update-checkbox', idNote => {
-        //     let doneCount = 0;
-        //     let notDoneCount = 0;
-        //     let allTasksCount = 0;
-        //     for (let task of this.note.tasks) {
-        //         allTasksCount++;
-        //         if (task.isDone === true) {
-        //             doneCount++;
-        //         } else {
-        //             notDoneCount++;
-        //         }
-        //     }
-        //     this.note.doneNum = (doneCount / (doneCount + notDoneCount)) * 100;
-        //     if (this.note.doneNum > 50) eventBus.$emit('move-column2', idNote, this.note);
-        //     if (this.note.doneNum === 100) eventBus.$emit('move-column3', idNote, this.note);
-        // })
+        
     },
     template: `
     <div class="todo-card todo-item">
@@ -228,13 +211,12 @@ Vue.component('note', {
         <div>
             <span>{{ note.taskTitle }}</span>
         </div>
-<!--        <form class="add-task-form" v-show="this.note.tasks.length < 5 && this.note.doneNum !== 100" @submit.prevent="addTask">-->
-<!--            <input class="task-title-input" placeholder="new task" v-model="taskTitle" type="text">-->
-<!--            <input class="submit-btn" type="submit" value="+">-->
-<!--        </form>-->
         <div class="date" v-if="note.date">
             <span>Date - {{ note.date }}</span>
             <span>Time - {{ note.time }}</span>
+        </div>
+        <div class="delete-block">
+            <button @click="deleteNote(idNote)">Delete</button>
         </div>
     </div>`,
 })
@@ -277,15 +259,10 @@ Vue.component('create-form', {
             title: null,
             taskTitle: null,
             date: null,
-            time: null, 
+            time: null,
         };
     },
     methods: {
-        // time(idNote) {
-        //     let timeData = new Date();
-        //     this.secondCol[idNote].time = timeData.getHours() + ':' + timeData.getMinutes();
-        //     this.secondCol[idNote].date = timeData.getDate() + '.' + timeData.getMonth() + '.' + timeData.getFullYear();
-        // },
         onSubmit() {
             if (this.title && this.taskTitle) {
                 let timeData = new Date();
