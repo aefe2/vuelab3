@@ -19,9 +19,9 @@ Vue.component('container', {
         eventBus.$on('note-submitted', createdNote => {
             this.columns[0].push(createdNote);
         });
-        // eventBus.$on('delete-note', (idCol, idNote) => {
-        //     this.columns[idCol].splice(idNote, 1)
-        // });
+        eventBus.$on('delete-note', (idCol, idNote) => {
+            this.columns[idCol].splice(idNote, 1)
+        });
         // if (localStorage.firstCol) {
         //     this.firstCol = JSON.parse(localStorage.firstCol)
         // }
@@ -195,8 +195,11 @@ Vue.component('note', {
         }
     },
     methods: {
-        deleteNote(idNote) {
-            eventBus.$emit('delete-note', idNote)
+        deleteNote(idNote, idCol) {
+            eventBus.$emit('delete-note', idNote, idCol)
+        },
+        editNote(idNote, idCol) {
+            eventBus.$emit('edit-note', idNote, idCol)
         }
     },
     mounted() {
@@ -227,13 +230,44 @@ Vue.component('note', {
 Vue.component('edit-note', {
     props: {},
     data() {
-        return {}
+        return {
+            title: null,
+            taskTitle: null,
+            deadlineDate: null,
+            deadlineTime: null,
+            editTime: null,
+            editDate: null
+        }
     },
-    methods: {},
+    methods: {
+        onSubmit() {
+            if (this.title || this.taskTitle || this.deadlineTime || this.deadlineDate) {
+                let DateTime = new Date()
+                let editNote = {
+                    title: this.title,
+                    taskTitle: this.taskTitle,
+                    deadlineDate: this.deadlineDate,
+                    deadlineTime: this.deadlineTime,
+                    editDate: DateTime.getFullYear() + '-' + DateTime.getMonth() + '-' + DateTime.getDay(),
+                    editTime: DateTime.getHours() + ':' + DateTime.getMinutes()
+                }
+                this.$emit('edit-submitted', editNote)
+            } else {
+                let editNote = {}
+                this.$emit('edit-submitted', editNote)
+            }
+            this.title = null;
+            this.taskTitle = null;
+            this.deadlineDate = null;
+            this.deadlineTime = null;
+        }
+    },
     mounted() {
     },
     template: `
-        
+<form @onsubmit="">
+    
+</form>
     `,
 })
 
