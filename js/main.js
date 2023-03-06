@@ -3,8 +3,10 @@ let eventBus = new Vue();
 Vue.component('container', {
     data() {
         return {
-            columns: [[], [], [], []],
-            isEdit: false,
+            firstCol: [],
+            secondCol: [],
+            thirdCol: [],
+            fourthCol: []
         }
     },
     methods: {
@@ -13,15 +15,13 @@ Vue.component('container', {
         //     localStorage.secondCol = JSON.stringify(this.secondCol)
         //     localStorage.thirdCol = JSON.stringify(this.thirdCol)
         // },
+        // time(idNote) {
+        //     let timeData = new Date();
+        //     this.secondCol[idNote].time = timeData.getHours() + ':' + timeData.getMinutes();
+        //     this.secondCol[idNote].date = timeData.getDate() + '.' + timeData.getMonth() + '.' + timeData.getFullYear();
+        // },
     },
-    //card-note
     mounted() {
-        eventBus.$on('note-submitted', createdNote => {
-            this.columns[0].push(createdNote);
-        });
-        eventBus.$on('delete-note', (idCol, idNote) => {
-            this.columns[idCol].splice(idNote, 1)
-        });
         // if (localStorage.firstCol) {
         //     this.firstCol = JSON.parse(localStorage.firstCol)
         // }
@@ -39,9 +39,9 @@ Vue.component('container', {
         //             this.save()
         //         }
         //     }
-        // } else if (this.secondCol.length === 5) {
-        //
-        // }
+        //     // } else if (this.secondCol.length === 5) {
+        //     //
+        //     // }
         // });
         // eventBus.$on('move-column3', (idNote, note) => {
         //     if (this.secondCol[idNote].doneNum === 100) {
@@ -56,7 +56,7 @@ Vue.component('container', {
     <div>
         <create-form></create-form>
         <div class="container">
-            <column1 class="column column1" :firstCol="firstCol"></column1>
+            <column1 :class="{ disabled: secondCol.length === 5 }" class="column column1" :firstCol="firstCol"></column1>
             <column2 class="column column2" :secondCol="secondCol"></column2>
             <column3 class="column column3" :thirdCol="thirdCol"></column3>
             <column4 class="column column4" :fourthCol="fourthCol"></column4>
@@ -71,9 +71,6 @@ Vue.component('column1', {
             type: Array,
             required: true
         },
-        idCol: {
-            type: Number
-        }
     },
     data() {
         return {}
@@ -82,7 +79,9 @@ Vue.component('column1', {
         eventBus.$on('on-submit', createNote => {
             this.firstCol.push(createNote)
             // this.save()
-            // }
+        });
+        eventBus.$on('delete-note', idNote => {
+            this.firstCol.splice(idNote, 1)
         })
     },
     methods: {
@@ -92,7 +91,6 @@ Vue.component('column1', {
     },
     template: `
      <div>
-        <h2>Scheduled tasks</h2>
         <note v-for="(note, index) in firstCol" @save="save()" :firstCol="firstCol" :key="note.key" :idNote="index" :note="note">
             
         </note>
@@ -117,7 +115,6 @@ Vue.component('column2', {
     },
     template: `
      <div>
-        <h2>Tasks at work</h2>
         <note v-for="(note, index) in secondCol" @save="save()" :secondCol="secondCol" :key="note.key" :idNote="index" :note="note">
             
         </note>
@@ -142,7 +139,6 @@ Vue.component('column3', {
     },
     template: `
      <div>
-        <h2>Testing</h2>
         <note v-for="(note, index) in thirdCol" @save="save()" :thirdCol="thirdCol" :key="note.key" :idNote="index" :note="note">
             
         </note>
@@ -162,12 +158,11 @@ Vue.component('column4', {
     },
     methods: {
         // save() {
-        //     localStorage.thirdCol = JSON.stringify(this.thirdCol)
+        //     localStorage.secondCol = JSON.stringify(this.secondCol)
         // }
     },
     template: `
      <div>
-        <h2>Completed tasks</h2>
         <note v-for="(note, index) in fourthCol" @save="save()" :fourthCol="fourthCol" :key="note.key" :idNote="index" :note="note">
             
         </note>
@@ -183,9 +178,6 @@ Vue.component('note', {
         idNote: {
             type: Number,
         },
-        idCol: {
-            type: Number
-        }
     },
     data() {
         return {
@@ -195,15 +187,11 @@ Vue.component('note', {
         }
     },
     methods: {
-        deleteNote(idNote, idCol) {
-            eventBus.$emit('delete-note', idNote, idCol)
-        },
-        editNote(idNote, idCol) {
-            eventBus.$emit('edit-note', idNote, idCol)
+        deleteNote(idNote) {
+            eventBus.$emit('delete-note', this.idNote)
         }
     },
     mounted() {
-
     },
     template: `
     <div class="todo-card todo-item">
@@ -227,48 +215,38 @@ Vue.component('note', {
     </div>`,
 })
 
-Vue.component('edit-note', {
-    props: {},
+Vue.component('task', {
+    props: {
+        task: {
+            type: Object
+        },
+        idNote: {
+            type: Number,
+        },
+    },
     data() {
-        return {
-            title: null,
-            taskTitle: null,
-            deadlineDate: null,
-            deadlineTime: null,
-            editTime: null,
-            editDate: null
-        }
+        return {}
     },
     methods: {
-        onSubmit() {
-            if (this.title || this.taskTitle || this.deadlineTime || this.deadlineDate) {
-                let DateTime = new Date()
-                let editNote = {
-                    title: this.title,
-                    taskTitle: this.taskTitle,
-                    deadlineDate: this.deadlineDate,
-                    deadlineTime: this.deadlineTime,
-                    editDate: DateTime.getFullYear() + '-' + DateTime.getMonth() + '-' + DateTime.getDay(),
-                    editTime: DateTime.getHours() + ':' + DateTime.getMinutes()
-                }
-                this.$emit('edit-submitted', editNote)
-            } else {
-                let editNote = {}
-                this.$emit('edit-submitted', editNote)
-            }
-            this.title = null;
-            this.taskTitle = null;
-            this.deadlineDate = null;
-            this.deadlineTime = null;
+        updateCounter() {
+            this.task.isDone = !this.task.isDone
+            eventBus.$emit('update-checkbox', this.idNote)
         }
     },
     mounted() {
+
     },
     template: `
-<form @onsubmit="">
-    
-</form>
-    `,
+    <div class="task">
+        <span class="task-title">{{ task.taskTitle }}</span>
+        <button :class="{done: task.isDone}" 
+        class="done-btn"
+        :disabled="task.isDone"
+        @click="updateCounter()">Done</button>
+<!--        <button v-show="task.isDone" -->
+<!--        class="undone-btn"-->
+<!--        @click="updateCounter()">Undone</button>-->
+    </div>`,
 })
 
 Vue.component('create-form', {
@@ -276,27 +254,30 @@ Vue.component('create-form', {
         return {
             title: null,
             taskTitle: null,
-            date: null,
             time: null,
+            date: null,
             deadlineDate: null,
-            deadlineTime: null
+            deadlineTime: null,
+            isDone: null,
         };
     },
     methods: {
         onSubmit() {
             if (this.title && this.taskTitle) {
-                let timeData = new Date();
+                let DateTime = new Date()
                 let createNote = {
                     title: this.title,
                     taskTitle: this.taskTitle,
-                    time: timeData.getHours() + ':' + timeData.getMinutes(),
-                    date: timeData.getFullYear() + '-' + Number(timeData.getMonth() + 1) + '-' + timeData.getDate(),
-                    deadlineDate: this.deadlineDate,
-                    deadlineTime: this.deadlineTime
+                    time: DateTime.getHours() + ':' + DateTime.getMinutes(),
+                    date: DateTime.getFullYear() + '-' + DateTime.getMonth() + '-' + DateTime.getDay(),
+                    deadlineTime: this.deadlineTime,
+                    deadlineDate: this.deadlineDate
                 }
                 eventBus.$emit('on-submit', createNote);
                 this.title = '';
                 this.taskTitle = '';
+                this.deadlineDate = null;
+                this.deadlineTime = null;
             }
         },
     },
