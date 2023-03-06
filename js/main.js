@@ -3,10 +3,8 @@ let eventBus = new Vue();
 Vue.component('container', {
     data() {
         return {
-            firstCol: [],
-            secondCol: [],
-            thirdCol: [],
-            fourthCol: []
+            columns: [[], [], [], []],
+            isEdit: false,
         }
     },
     methods: {
@@ -16,10 +14,14 @@ Vue.component('container', {
         //     localStorage.thirdCol = JSON.stringify(this.thirdCol)
         // },
     },
+    //card-note
     mounted() {
-        eventBus.$on('delete-note', (idNote) => {
-            this.firstCol.splice(idNote, 1)
-        })
+        eventBus.$on('note-submitted', createdNote => {
+            this.columns[0].push(createdNote);
+        });
+        // eventBus.$on('delete-note', (idCol, idNote) => {
+        //     this.columns[idCol].splice(idNote, 1)
+        // });
         // if (localStorage.firstCol) {
         //     this.firstCol = JSON.parse(localStorage.firstCol)
         // }
@@ -54,7 +56,7 @@ Vue.component('container', {
     <div>
         <create-form></create-form>
         <div class="container">
-            <column1 class="column column1" :idCol="0" :firstCol="firstCol"></column1>
+            <column1 class="column column1" :firstCol="firstCol"></column1>
             <column2 class="column column2" :secondCol="secondCol"></column2>
             <column3 class="column column3" :thirdCol="thirdCol"></column3>
             <column4 class="column column4" :fourthCol="fourthCol"></column4>
@@ -78,7 +80,6 @@ Vue.component('column1', {
     },
     mounted() {
         eventBus.$on('on-submit', createNote => {
-            // if (this.firstCol.length < 3) {
             this.firstCol.push(createNote)
             // this.save()
             // }
@@ -235,38 +236,6 @@ Vue.component('edit-note', {
         
     `,
 })
-
-// Vue.component('task', {
-//     props: {
-//         task: {
-//             type: Object
-//         },
-//         idNote: {
-//             type: Number,
-//         },
-//     },
-//     data() {
-//         return {}
-//     },
-//     methods: {
-//         // updateCounter() {
-//         //     this.task.isDone = !this.task.isDone
-//         //     eventBus.$emit('update-checkbox', this.idNote)
-//         // }
-//     },
-//     mounted() {
-//
-//     },
-//     template: `
-//     <div class="task">
-//         <span class="task-title">{{ task.taskTitle }}</span>
-// <!--        <button :class="{done: task.isDone}" -->
-// <!--        class="done-btn">Done</button>-->
-// <!--        <button v-show="task.isDone" -->
-// <!--        class="undone-btn"-->
-// <!--        @click="updateCounter()">Undone</button>-->
-//     </div>`,
-// })
 
 Vue.component('create-form', {
     data() {
