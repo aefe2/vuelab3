@@ -6,7 +6,8 @@ Vue.component('container', {
             firstCol: [],
             secondCol: [],
             thirdCol: [],
-            fourthCol: []
+            fourthCol: [],
+            isEdit: false
         }
     },
     methods: {
@@ -37,6 +38,10 @@ Vue.component('container', {
         eventBus.$on('move-back', (idNote) => {
             this.secondCol.push(this.thirdCol[idNote])
             this.thirdCol.splice(idNote, 1)
+        })
+        eventBus.$on('edit-note', idNote => {
+            this.isEdit = true;
+            eventBus.$on('edit-done',)
         })
         // if (localStorage.firstCol) {
         //     this.firstCol = JSON.parse(localStorage.firstCol)
@@ -70,7 +75,8 @@ Vue.component('container', {
     },
     template: `
     <div>
-        <create-form></create-form>
+        <create-form v-if="!isEdit"></create-form>
+        <edit v-if="isEdit"></edit>
         <div class="container">
             <column1 :class="{ disabled: secondCol.length === 5 }" class="column column1" :firstCol="firstCol"></column1>
             <column2 class="column column2" :secondCol="secondCol"></column2>
@@ -228,7 +234,7 @@ Vue.component('note', {
         },
         editNote(idNote) {
             let buffStatus = this.note.statusCol;
-
+            eventBus.$emit('edit-note', idNote, buffStatus)
         }
     },
     mounted() {
@@ -239,7 +245,7 @@ Vue.component('note', {
             <span>{{ note.title }}</span>
         </div>
         <div>
-            <span>{{ note.taskTitle }}</span>
+            <span>{{ note.description }}</span>
         </div>
         <div v-if="!isReason" class="reason">
             <span v-if="note.reason">{{ note.reason }}</span>
@@ -267,66 +273,93 @@ Vue.component('note', {
     </div>`,
 })
 
-Vue.component('task', {
-    props: {
-        task: {
-            type: Object
-        },
-        idNote: {
-            type: Number,
-        },
-    },
-    data() {
-        return {}
-    },
-    methods: {
-        updateCounter() {
-            this.task.isDone = !this.task.isDone
-            eventBus.$emit('update-checkbox', this.idNote)
-        }
-    },
-    mounted() {
-
-    },
-    template: `
-    <div class="task">
-        <span class="task-title">{{ task.taskTitle }}</span>
-        <button :class="{done: task.isDone}" 
-        class="done-btn"
-        :disabled="task.isDone"
-        @click="updateCounter()">Done</button>
-<!--        <button v-show="task.isDone" -->
-<!--        class="undone-btn"-->
-<!--        @click="updateCounter()">Undone</button>-->
-    </div>`,
-})
+// Vue.component('task', {
+//     props: {
+//         task: {
+//             type: Object
+//         },
+//         idNote: {
+//             type: Number,
+//         },
+//     },
+//     data() {
+//         return {}
+//     },
+//     methods: {
+//         updateCounter() {
+//             this.task.isDone = !this.task.isDone
+//             eventBus.$emit('update-checkbox', this.idNote)
+//         }
+//     },
+//     mounted() {
+//
+//     },
+//     template: `
+//     <div class="task">
+//         <span class="task-title">{{ task.taskTitle }}</span>
+//         <button :class="{done: task.isDone}"
+//         class="done-btn"
+//         :disabled="task.isDone"
+//         @click="updateCounter()">Done</button>
+// <!--        <button v-show="task.isDone" -->
+// <!--        class="undone-btn"-->
+// <!--        @click="updateCounter()">Undone</button>-->
+//     </div>`,
+// })
 
 Vue.component('edit', {
-    props: {},
-    methods: {},
+    methods: {
+        formEdit() {
+            if (this.title || this.description || this.deadlineTime || this.deadlineDate) {
+                let DateTime = new Date();
+                let editNote = {
+                    title: this.title,
+                    description: this.description,
+                    deadlineDate: this.deadlineDate,
+                    deadlineTime: this.deadlineTime,
+                    editTime: DateTime.getHours() + ':' + DateTime.getMinutes(),
+                    editDate: DateTime.getFullYear() + '-' + Number(DateTime.getMonth() + 1) + '-' + DateTime.getDate()
+                }
+                eventBus.$emit('edit-done', editNote);
+            } else {
+                let editNote = {}
+                eventBus.$emit('edit-done', editNote)
+            }
+            this.title = null;
+            this.description = null;
+            this.deadlineDate = null;
+            this.deadlineTime = null;
+            this.editTime = null;
+            this.editDate = null;
+        }
+    },
     mounted() {
     },
     data() {
         return {
             title: null,
-            taskTitle: null,
+            description: null,
             editTime: null,
             editDate: null,
             deadlineDate: null,
             deadlineTime: null,
         }
     },
-    template:`
-    <form class="editForm" @submit.prevent="formEdit">
+    template: `
+<div class="form-container">
+    <form class="create-form edit-form" @submit.prevent="formEdit">
         <label>Title</label>
-        <input type="text" placeholder="title">
+        <input type="text" v-model="title" placeholder="title">
         <label>Description</label>
-        <input type="text" placeholder="description">
-        <label>DeadLine</label>
-        <input type="date">
-        <input type="time">
+        <input type="text" v-model="description" placeholder="description">
+        <div class="date-input">
+            <label>DeadLine</label>
+            <input type="date" v-model="deadlineDate">
+            <input type="time" v-model="deadlineTime">
+        </div>
         <input type="submit" value="Submit">
     </form>
+</div>
     `
 })
 
@@ -334,7 +367,7 @@ Vue.component('create-form', {
     data() {
         return {
             title: null,
-            taskTitle: null,
+            description: null,
             time: null,
             date: null,
             deadlineDate: null,
@@ -345,11 +378,11 @@ Vue.component('create-form', {
     },
     methods: {
         onSubmit() {
-            if (this.title && this.taskTitle) {
+            if (this.title && this.description) {
                 let DateTime = new Date()
                 let createNote = {
                     title: this.title,
-                    taskTitle: this.taskTitle,
+                    description: this.description,
                     time: DateTime.getHours() + ':' + DateTime.getMinutes(),
                     date: DateTime.getFullYear() + '-' + DateTime.getMonth() + '-' + DateTime.getDay(),
                     deadlineTime: this.deadlineTime,
@@ -359,7 +392,7 @@ Vue.component('create-form', {
                 }
                 eventBus.$emit('on-submit', createNote);
                 this.title = '';
-                this.taskTitle = '';
+                this.description = '';
                 this.deadlineDate = null;
                 this.deadlineTime = null;
             }
@@ -369,7 +402,7 @@ Vue.component('create-form', {
     <form class="create-form" @submit.prevent="onSubmit">
         <label>Create Todo</label>
         <input v-model="title" type="text" placeholder="title">
-        <input v-model="taskTitle" type="text" placeholder="description">
+        <input v-model="description" type="text" placeholder="description">
         <span>Deadline</span>
         <div class="date-input">
             <input type="date" v-model="deadlineDate">
