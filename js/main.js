@@ -22,6 +22,18 @@ Vue.component('container', {
         // },
     },
     mounted() {
+        eventBus.$on('move-note-to-next-col', (idNote, buffStatus) => {
+            if (buffStatus === 1) {
+                this.secondCol.push(this.firstCol[idNote])
+                this.firstCol.splice(idNote, 1)
+            } else if (buffStatus === 2) {
+                this.thirdCol.push(this.secondCol[idNote])
+                this.secondCol.splice(idNote, 1)
+            } else if (buffStatus === 3) {
+                this.fourthCol.push(this.thirdCol[idNote])
+                this.thirdCol.splice(idNote, 1)
+            }
+        })
         // if (localStorage.firstCol) {
         //     this.firstCol = JSON.parse(localStorage.firstCol)
         // }
@@ -91,6 +103,7 @@ Vue.component('column1', {
     },
     template: `
      <div>
+        <h4>Planned Tasks</h4>
         <note v-for="(note, index) in firstCol" @save="save()" :firstCol="firstCol" :key="note.key" :idNote="index" :note="note">
             
         </note>
@@ -115,6 +128,7 @@ Vue.component('column2', {
     },
     template: `
      <div>
+        <h4>In Work</h4>
         <note v-for="(note, index) in secondCol" @save="save()" :secondCol="secondCol" :key="note.key" :idNote="index" :note="note">
             
         </note>
@@ -139,6 +153,7 @@ Vue.component('column3', {
     },
     template: `
      <div>
+        <h4>Testing</h4>
         <note v-for="(note, index) in thirdCol" @save="save()" :thirdCol="thirdCol" :key="note.key" :idNote="index" :note="note">
             
         </note>
@@ -163,6 +178,7 @@ Vue.component('column4', {
     },
     template: `
      <div>
+        <h4>Done Tasks</h4>
         <note v-for="(note, index) in fourthCol" @save="save()" :fourthCol="fourthCol" :key="note.key" :idNote="index" :note="note">
             
         </note>
@@ -189,6 +205,10 @@ Vue.component('note', {
     methods: {
         deleteNote(idNote) {
             eventBus.$emit('delete-note', this.idNote)
+        },
+        moveNote(idNote) {
+            let buffStatus = this.note.statusCol++
+            eventBus.$emit('move-note-to-next-col', this.idNote, buffStatus)
         }
     },
     mounted() {
@@ -210,7 +230,10 @@ Vue.component('note', {
             <span>Time - {{ note.deadlineTime }}</span>
         </div>
         <div class="delete-block">
-            <button @click="deleteNote(idNote)">Delete</button>
+            <button v-if="note.statusCol === 1" @click="deleteNote(idNote)">Delete</button>
+        </div>
+        <div class="move">
+            <button v-if="note.statusCol !== 4" @click="moveNote(idNote)">Move</button>
         </div>
     </div>`,
 })
@@ -271,7 +294,8 @@ Vue.component('create-form', {
                     time: DateTime.getHours() + ':' + DateTime.getMinutes(),
                     date: DateTime.getFullYear() + '-' + DateTime.getMonth() + '-' + DateTime.getDay(),
                     deadlineTime: this.deadlineTime,
-                    deadlineDate: this.deadlineDate
+                    deadlineDate: this.deadlineDate,
+                    statusCol: 1
                 }
                 eventBus.$emit('on-submit', createNote);
                 this.title = '';
