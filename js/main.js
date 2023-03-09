@@ -47,8 +47,24 @@ Vue.component('container', {
                     if (editNote.description) this.firstCol[idNote].description = editNote.description;
                     if (editNote.deadlineTime) this.firstCol[idNote].deadlineTime = editNote.deadlineTime;
                     if (editNote.deadlineDate) this.firstCol[idNote].deadlineDate = editNote.deadlineDate;
+                    this.firstCol[idNote].editDate = editNote.editDate;
+                    this.firstCol[idNote].editTime = editNote.editTime;
+                } else if (buffStatus === 2) {
+                    if (editNote.title) this.secondCol[idNote].title = editNote.title;
+                    if (editNote.description) this.secondCol[idNote].description = editNote.description;
+                    if (editNote.deadlineTime) this.secondCol[idNote].deadlineTime = editNote.deadlineTime;
+                    if (editNote.deadlineDate) this.secondCol[idNote].deadlineDate = editNote.deadlineDate;
+                    this.secondCol[idNote].editDate = editNote.deadlineDate;
+                    this.secondCol[idNote].editTime = editNote.deadlineTime;
+                } else if (buffStatus === 3) {
+                    if (editNote.title) this.thirdCol[idNote].title = editNote.title;
+                    if (editNote.description) this.thirdCol[idNote].description = editNote.description;
+                    if (editNote.deadlineTime) this.thirdCol[idNote].deadlineTime = editNote.deadlineTime;
+                    if (editNote.deadlineDate) this.thirdCol[idNote].deadlineDate = editNote.deadlineDate;
+                    this.thirdCol[idNote].editDate = editNote.deadlineDate;
+                    this.thirdCol[idNote].editTime = editNote.deadlineTime;
                 }
-                this.isEdit = false
+                this.isEdit = false;
             })
         })
         // if (localStorage.firstCol) {
@@ -121,7 +137,7 @@ Vue.component('column1', {
     },
     template: `
      <div>
-        <h4>Planned Tasks</h4>
+        <label>Planned Tasks</label>
         <note v-for="(note, index) in firstCol" @save="save()" :firstCol="firstCol" :key="note.key" :idNote="index" :note="note">
             
         </note>
@@ -146,7 +162,7 @@ Vue.component('column2', {
     },
     template: `
      <div>
-        <h4>In Work</h4>
+        <label>In Work</label>
         <note v-for="(note, index) in secondCol" @save="save()" :secondCol="secondCol" :key="note.key" :idNote="index" :note="note">
             
         </note>
@@ -171,7 +187,7 @@ Vue.component('column3', {
     },
     template: `
      <div>
-        <h4>Testing</h4>
+        <label>Testing</label>
         <note v-for="(note, index) in thirdCol" @save="save()" :thirdCol="thirdCol" :key="note.key" :idNote="index" :note="note">
             
         </note>
@@ -196,7 +212,7 @@ Vue.component('column4', {
     },
     template: `
      <div>
-        <h4>Done Tasks</h4>
+        <label>Done Tasks</label>
         <note v-for="(note, index) in fourthCol" @save="save()" :fourthCol="fourthCol" :key="note.key" :idNote="index" :note="note">
             
         </note>
@@ -265,6 +281,11 @@ Vue.component('note', {
         <div class="deadline">
             <span>Date - {{ note.deadlineDate }}</span>
             <span>Time - {{ note.deadlineTime }}</span>
+        </div>
+        <div class="deadline">
+            <span>Last edit:</span>
+            <span>Date - {{ note.editDate }}</span>
+            <span>Time - {{ note.editTime }}</span>
         </div>
         <div v-if="isReason" class="reason-input">
             <input type="text" v-model="note.reason" placeholder="return reason">
@@ -356,10 +377,10 @@ Vue.component('edit', {
     template: `
 <div class="form-container">
     <form class="create-form edit-form" @submit.prevent="formEdit">
-        <label>Title</label>
-        <input type="text" v-model="title" placeholder="title">
+        <label>Edit Todo</label>
+        <input type="text" v-model="title" placeholder="new title">
         <label>Description</label>
-        <input type="text" v-model="description" placeholder="description">
+        <input type="text" v-model="description" placeholder="new description">
         <label>DeadLine</label>
         <div class="date-input">
             <input type="date" v-model="deadlineDate">
@@ -396,7 +417,9 @@ Vue.component('create-form', {
                     deadlineTime: this.deadlineTime,
                     deadlineDate: this.deadlineDate,
                     statusCol: 1,
-                    reason: null
+                    reason: null,
+                    editDate: null,
+                    editTime: null
                 }
                 eventBus.$emit('on-submit', createNote);
                 this.title = '';
@@ -411,7 +434,7 @@ Vue.component('create-form', {
         <label>Create Todo</label>
         <input v-model="title" type="text" placeholder="title">
         <input v-model="description" type="text" placeholder="description">
-        <span>Deadline</span>
+        <label>Deadline</label>
         <div class="date-input">
             <input type="date" v-model="deadlineDate">
             <input type="time" v-model="deadlineTime">
