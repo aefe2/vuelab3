@@ -33,6 +33,10 @@ Vue.component('container', {
                 this.fourthCol.push(this.thirdCol[idNote])
                 this.thirdCol.splice(idNote, 1)
             }
+        });
+        eventBus.$on('move-back', (idNote) => {
+            this.secondCol.push(this.thirdCol[idNote])
+            this.thirdCol.splice(idNote, 1)
         })
         // if (localStorage.firstCol) {
         //     this.firstCol = JSON.parse(localStorage.firstCol)
@@ -194,12 +198,16 @@ Vue.component('note', {
         idNote: {
             type: Number,
         },
+        reason: {
+            type: String
+        }
     },
     data() {
         return {
             taskTitle: null,
             isDone: false,
-            doneNum: 0
+            doneNum: 0,
+            isReason: false
         }
     },
     methods: {
@@ -209,6 +217,18 @@ Vue.component('note', {
         moveNote(idNote) {
             let buffStatus = this.note.statusCol++
             eventBus.$emit('move-note-to-next-col', this.idNote, buffStatus)
+        },
+        moveBack(idNote) {
+            this.isReason = true
+        },
+        reasonBack(idNote) {
+            let buffStatus = this.note.statusCol--
+            this.isReason = false
+            eventBus.$emit('move-back', idNote, buffStatus)
+        },
+        editNote(idNote) {
+            let buffStatus = this.note.statusCol;
+
         }
     },
     mounted() {
@@ -221,6 +241,9 @@ Vue.component('note', {
         <div>
             <span>{{ note.taskTitle }}</span>
         </div>
+        <div v-if="!isReason" class="reason">
+            <span v-if="note.reason">{{ note.reason }}</span>
+        </div>
         <div class="date" v-if="note.date">
             <span>Date - {{ note.date }}</span>
             <span>Time - {{ note.time }}</span>
@@ -229,11 +252,17 @@ Vue.component('note', {
             <span>Date - {{ note.deadlineDate }}</span>
             <span>Time - {{ note.deadlineTime }}</span>
         </div>
+        <div v-if="isReason" class="reason-input">
+            <input type="text" v-model="note.reason" placeholder="return reason">
+            <button @click="reasonBack(idNote)">Submit</button>
+        </div>
         <div class="delete-block">
             <button v-if="note.statusCol === 1" @click="deleteNote(idNote)">Delete</button>
         </div>
-        <div class="move">
-            <button v-if="note.statusCol !== 4" @click="moveNote(idNote)">Move</button>
+        <div class="btns">
+            <button v-if="note.statusCol !== 4 && !isReason" @click="moveNote(idNote)">Move</button>
+            <button v-if="note.statusCol === 3" @click="moveBack(idNote)">Move back</button>
+            <button v-if="note.statusCol !== 4" @click="editNote(idNote)">Edit</button>
         </div>
     </div>`,
 })
@@ -272,6 +301,35 @@ Vue.component('task', {
     </div>`,
 })
 
+Vue.component('edit', {
+    props: {},
+    methods: {},
+    mounted() {
+    },
+    data() {
+        return {
+            title: null,
+            taskTitle: null,
+            editTime: null,
+            editDate: null,
+            deadlineDate: null,
+            deadlineTime: null,
+        }
+    },
+    template:`
+    <form class="editForm" @submit.prevent="formEdit">
+        <label>Title</label>
+        <input type="text" placeholder="title">
+        <label>Description</label>
+        <input type="text" placeholder="description">
+        <label>DeadLine</label>
+        <input type="date">
+        <input type="time">
+        <input type="submit" value="Submit">
+    </form>
+    `
+})
+
 Vue.component('create-form', {
     data() {
         return {
@@ -282,6 +340,7 @@ Vue.component('create-form', {
             deadlineDate: null,
             deadlineTime: null,
             isDone: null,
+            reason: null
         };
     },
     methods: {
@@ -295,7 +354,8 @@ Vue.component('create-form', {
                     date: DateTime.getFullYear() + '-' + DateTime.getMonth() + '-' + DateTime.getDay(),
                     deadlineTime: this.deadlineTime,
                     deadlineDate: this.deadlineDate,
-                    statusCol: 1
+                    statusCol: 1,
+                    reason: null
                 }
                 eventBus.$emit('on-submit', createNote);
                 this.title = '';
