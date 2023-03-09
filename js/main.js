@@ -33,6 +33,8 @@ Vue.component('container', {
             } else if (buffStatus === 3) {
                 this.fourthCol.push(this.thirdCol[idNote])
                 this.thirdCol.splice(idNote, 1)
+            } else if (buffStatus === 4) {
+
             }
         });
         eventBus.$on('move-back', (idNote) => {
