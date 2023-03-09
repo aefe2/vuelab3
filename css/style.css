@@ -4,12 +4,25 @@
     padding: 0;
 }
 
+::-webkit-scrollbar {
+    width: 10px;
+    background: radial-gradient(#464630, #40402c);
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: radial-gradient(#9d8c43, #c4af53);
+}
+
+
 @font-face {
     font-family: 'Montserrat', sans-serif;
     src: url("/fonts/Montserrat/Montserrat-Regular.ttf") format('ttf');
 }
 
 body {
+    background-color: rgba(211, 208, 189, 0.93);
+    color: #3a3a3a;
     height: 100vh;
 }
 
@@ -111,7 +124,8 @@ li {
 }
 
 .create-form label {
-    text-shadow: #aa00ff 0 0 15px;
+    color: #7c4e09;
+    /*text-shadow: #aa00ff 0 0 15px;*/
 }
 
 .delete-btn {
@@ -273,9 +287,11 @@ form > input {
     height: 100vh;
     background-color: white;
 }
+
 .edit-form > label {
     margin-top: 10px;
 }
+
 .edit-form {
     transition-duration: 1s;
     position: fixed;

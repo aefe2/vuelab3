@@ -11,16 +11,7 @@ Vue.component('container', {
         }
     },
     methods: {
-        // save() {
-        //     localStorage.firstCol = JSON.stringify(this.firstCol)
-        //     localStorage.secondCol = JSON.stringify(this.secondCol)
-        //     localStorage.thirdCol = JSON.stringify(this.thirdCol)
-        // },
-        // time(idNote) {
-        //     let timeData = new Date();
-        //     this.secondCol[idNote].time = timeData.getHours() + ':' + timeData.getMinutes();
-        //     this.secondCol[idNote].date = timeData.getDate() + '.' + timeData.getMonth() + '.' + timeData.getFullYear();
-        // },
+
     },
     mounted() {
         eventBus.$on('move-note-to-next-col', (idNote, buffStatus) => {
@@ -69,42 +60,14 @@ Vue.component('container', {
                 this.isEdit = false;
             })
         })
-        // if (localStorage.firstCol) {
-        //     this.firstCol = JSON.parse(localStorage.firstCol)
-        // }
-        // if (localStorage.secondCol) {
-        //     this.secondCol = JSON.parse(localStorage.secondCol)
-        // }
-        // if (localStorage.thirdCol) {
-        //     this.thirdCol = JSON.parse(localStorage.thirdCol)
-        // }
-        // eventBus.$on('move-column2', (idNote, note) => {
-        //     if (this.secondCol.length < 5) {
-        //         if (this.firstCol[idNote].doneNum >= 50) {
-        //             this.secondCol.push(this.firstCol[idNote])
-        //             this.firstCol.splice(idNote, 1)
-        //             this.save()
-        //         }
-        //     }
-        //     // } else if (this.secondCol.length === 5) {
-        //     //
-        //     // }
-        // });
-        // eventBus.$on('move-column3', (idNote, note) => {
-        //     if (this.secondCol[idNote].doneNum === 100) {
-        //         this.time(idNote)
-        //         this.thirdCol.push(this.secondCol[idNote])
-        //         this.secondCol.splice(idNote, 1)
-        //         this.save()
-        //     }
-        // })
+        
     },
     template: `
     <div>
         <create-form v-if="!isEdit"></create-form>
         <edit v-if="isEdit"></edit>
         <div class="container">
-            <column1 :class="{ disabled: secondCol.length === 5 }" class="column column1" :firstCol="firstCol"></column1>
+            <column1 class="column column1" :firstCol="firstCol"></column1>
             <column2 class="column column2" :secondCol="secondCol"></column2>
             <column3 class="column column3" :thirdCol="thirdCol"></column3>
             <column4 class="column column4" :fourthCol="fourthCol"></column4>
@@ -126,20 +89,17 @@ Vue.component('column1', {
     mounted() {
         eventBus.$on('on-submit', createNote => {
             this.firstCol.push(createNote)
-            // this.save()
         });
         eventBus.$on('delete-note', idNote => {
             this.firstCol.splice(idNote, 1)
         })
     },
     methods: {
-        // save() {
-        //     localStorage.firstCol = JSON.stringify(this.firstCol)
-        // },
+
     },
     template: `
      <div>
-        <label>Planned Tasks</label>
+     <span>Planned Tasks</span>
         <note v-for="(note, index) in firstCol" @save="save()" :firstCol="firstCol" :key="note.key" :idNote="index" :note="note">
             
         </note>
@@ -158,13 +118,11 @@ Vue.component('column2', {
         return {}
     },
     methods: {
-        // save() {
-        //     localStorage.secondCol = JSON.stringify(this.secondCol)
-        // }
+
     },
     template: `
      <div>
-        <label>In Work</label>
+        <span>In Work</span>
         <note v-for="(note, index) in secondCol" @save="save()" :secondCol="secondCol" :key="note.key" :idNote="index" :note="note">
             
         </note>
@@ -183,13 +141,11 @@ Vue.component('column3', {
         return {}
     },
     methods: {
-        // save() {
-        //     localStorage.thirdCol = JSON.stringify(this.thirdCol)
-        // }
+
     },
     template: `
      <div>
-        <label>Testing</label>
+        <span>Testing</span>
         <note v-for="(note, index) in thirdCol" @save="save()" :thirdCol="thirdCol" :key="note.key" :idNote="index" :note="note">
             
         </note>
@@ -208,13 +164,11 @@ Vue.component('column4', {
         return {}
     },
     methods: {
-        // save() {
-        //     localStorage.secondCol = JSON.stringify(this.secondCol)
-        // }
+
     },
     template: `
      <div>
-        <label>Done Tasks</label>
+        <span>Done Tasks</span>
         <note v-for="(note, index) in fourthCol" @save="save()" :fourthCol="fourthCol" :key="note.key" :idNote="index" :note="note">
             
         </note>
@@ -303,40 +257,6 @@ Vue.component('note', {
         </div>
     </div>`,
 })
-
-// Vue.component('task', {
-//     props: {
-//         task: {
-//             type: Object
-//         },
-//         idNote: {
-//             type: Number,
-//         },
-//     },
-//     data() {
-//         return {}
-//     },
-//     methods: {
-//         updateCounter() {
-//             this.task.isDone = !this.task.isDone
-//             eventBus.$emit('update-checkbox', this.idNote)
-//         }
-//     },
-//     mounted() {
-//
-//     },
-//     template: `
-//     <div class="task">
-//         <span class="task-title">{{ task.taskTitle }}</span>
-//         <button :class="{done: task.isDone}"
-//         class="done-btn"
-//         :disabled="task.isDone"
-//         @click="updateCounter()">Done</button>
-// <!--        <button v-show="task.isDone" -->
-// <!--        class="undone-btn"-->
-// <!--        @click="updateCounter()">Undone</button>-->
-//     </div>`,
-// })
 
 Vue.component('edit', {
     methods: {
