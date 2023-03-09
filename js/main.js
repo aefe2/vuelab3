@@ -39,9 +39,17 @@ Vue.component('container', {
             this.secondCol.push(this.thirdCol[idNote])
             this.thirdCol.splice(idNote, 1)
         })
-        eventBus.$on('edit-note', idNote => {
+        eventBus.$on('edit-note', (idNote, buffStatus) => {
             this.isEdit = true;
-            eventBus.$on('edit-done',)
+            eventBus.$on('edit-done', editNote => {
+                if (buffStatus === 1) {
+                    if (editNote.title) this.firstCol[idNote].title = editNote.title;
+                    if (editNote.description) this.firstCol[idNote].description = editNote.description;
+                    if (editNote.deadlineTime) this.firstCol[idNote].deadlineTime = editNote.deadlineTime;
+                    if (editNote.deadlineDate) this.firstCol[idNote].deadlineDate = editNote.deadlineDate;
+                }
+                this.isEdit = false
+            })
         })
         // if (localStorage.firstCol) {
         //     this.firstCol = JSON.parse(localStorage.firstCol)
@@ -352,8 +360,8 @@ Vue.component('edit', {
         <input type="text" v-model="title" placeholder="title">
         <label>Description</label>
         <input type="text" v-model="description" placeholder="description">
+        <label>DeadLine</label>
         <div class="date-input">
-            <label>DeadLine</label>
             <input type="date" v-model="deadlineDate">
             <input type="time" v-model="deadlineTime">
         </div>

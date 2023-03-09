@@ -239,6 +239,7 @@ form > input {
 .date-input {
     display: flex;
     margin-top: 10px;
+    align-items: center;
 }
 
 .date-input > input {
@@ -267,7 +268,9 @@ form > input {
     height: 100vh;
     background-color: white;
 }
-
+.edit-form > label {
+    margin-top: 10px;
+}
 .edit-form {
     transition-duration: 1s;
     position: fixed;
