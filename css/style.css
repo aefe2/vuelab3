@@ -42,6 +42,7 @@ h2 {
 }
 
 .column {
+    font-size: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -88,7 +89,7 @@ li {
     border: 1px solid #808080;
     border-radius: 15px;
     /*box-shadow: aqua inset 0 0 10px;*/
-    box-shadow: inset rgba(170, 0, 255, 0.29) 0 0 10px;
+    /*box-shadow: inset rgba(170, 0, 255, 0.29) 0 0 10px;*/
     padding: 20px;
     margin: 10px;
 }
@@ -108,6 +109,7 @@ li {
     padding: 10px;
     border-radius: 20px;
     border: 1px solid #808080;
+    background-color: rgba(255, 255, 255, 0.7);
 }
 
 .create-form > button {
@@ -238,19 +240,6 @@ form > input {
     box-shadow: inset rgba(204, 204, 203, 0.25) 0 0 10px;
 }
 
-.disabled:before {
-    transition-duration: 1.5s;
-    content: 'locked for editing';
-    color: rgba(232, 12, 12, 0.82);
-    margin: auto;
-}
-
-.disabled {
-    transition-duration: 1s;
-    box-shadow: inset rgba(232, 12, 12, 0.82) 0 0 30px;
-    pointer-events: none;
-}
-
 .create-form > span {
     margin-top: 10px;
 }
@@ -266,6 +255,7 @@ form > input {
     border: 1px solid #808080;
     padding: 10px;
     margin-right: 5px;
+    background-color: rgba(255, 255, 255, 0.7);
 }
 
 .deadline {
@@ -276,7 +266,7 @@ form > input {
     border: 1px solid grey;
     border-radius: 15px;
     padding: 10px;
-    box-shadow: inset rgba(255, 77, 0, 0.54) 0 0 10px;
+    /*box-shadow: inset rgba(255, 77, 0, 0.54) 0 0 10px;*/
 }
 
 .form-container {

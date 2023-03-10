@@ -47,15 +47,15 @@ Vue.component('container', {
                     if (editNote.description) this.secondCol[idNote].description = editNote.description;
                     if (editNote.deadlineTime) this.secondCol[idNote].deadlineTime = editNote.deadlineTime;
                     if (editNote.deadlineDate) this.secondCol[idNote].deadlineDate = editNote.deadlineDate;
-                    this.secondCol[idNote].editDate = editNote.deadlineDate;
-                    this.secondCol[idNote].editTime = editNote.deadlineTime;
+                    this.secondCol[idNote].editDate = editNote.editDate;
+                    this.secondCol[idNote].editTime = editNote.editTime;
                 } else if (buffStatus === 3) {
                     if (editNote.title) this.thirdCol[idNote].title = editNote.title;
                     if (editNote.description) this.thirdCol[idNote].description = editNote.description;
                     if (editNote.deadlineTime) this.thirdCol[idNote].deadlineTime = editNote.deadlineTime;
                     if (editNote.deadlineDate) this.thirdCol[idNote].deadlineDate = editNote.deadlineDate;
-                    this.thirdCol[idNote].editDate = editNote.deadlineDate;
-                    this.thirdCol[idNote].editTime = editNote.deadlineTime;
+                    this.thirdCol[idNote].editDate = editNote.editDate;
+                    this.thirdCol[idNote].editTime = editNote.editTime;
                 }
                 this.isEdit = false;
             })
@@ -235,10 +235,11 @@ Vue.component('note', {
             <span>Time - {{ note.time }}</span>
         </div>
         <div class="deadline">
+            <span>Deadline:</span>
             <span>Date - {{ note.deadlineDate }}</span>
             <span>Time - {{ note.deadlineTime }}</span>
         </div>
-        <div class="deadline">
+        <div v-if="note.editDate" class="deadline">
             <span>Last edit:</span>
             <span>Date - {{ note.editDate }}</span>
             <span>Time - {{ note.editTime }}</span>
