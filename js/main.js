@@ -10,9 +10,7 @@ Vue.component('container', {
             isEdit: false
         }
     },
-    methods: {
-
-    },
+    methods: {},
     mounted() {
         eventBus.$on('move-note-to-next-col', (idNote, buffStatus) => {
             if (buffStatus === 1) {
@@ -24,8 +22,6 @@ Vue.component('container', {
             } else if (buffStatus === 3) {
                 this.fourthCol.push(this.thirdCol[idNote])
                 this.thirdCol.splice(idNote, 1)
-            } else if (buffStatus === 4) {
-
             }
         });
         eventBus.$on('move-back', (idNote) => {
@@ -60,7 +56,7 @@ Vue.component('container', {
                 this.isEdit = false;
             })
         })
-        
+
     },
     template: `
     <div>
@@ -94,12 +90,10 @@ Vue.component('column1', {
             this.firstCol.splice(idNote, 1)
         })
     },
-    methods: {
-
-    },
+    methods: {},
     template: `
      <div>
-     <span>Planned Tasks</span>
+        <span class="col-title">Planned Tasks</span>
         <note v-for="(note, index) in firstCol" @save="save()" :firstCol="firstCol" :key="note.key" :idNote="index" :note="note">
             
         </note>
@@ -117,12 +111,10 @@ Vue.component('column2', {
     data() {
         return {}
     },
-    methods: {
-
-    },
+    methods: {},
     template: `
      <div>
-        <span>In Work</span>
+        <span class="col-title">In Work</span>
         <note v-for="(note, index) in secondCol" @save="save()" :secondCol="secondCol" :key="note.key" :idNote="index" :note="note">
             
         </note>
@@ -140,12 +132,10 @@ Vue.component('column3', {
     data() {
         return {}
     },
-    methods: {
-
-    },
+    methods: {},
     template: `
      <div>
-        <span>Testing</span>
+        <span class="col-title">Testing</span>
         <note v-for="(note, index) in thirdCol" @save="save()" :thirdCol="thirdCol" :key="note.key" :idNote="index" :note="note">
             
         </note>
@@ -163,12 +153,10 @@ Vue.component('column4', {
     data() {
         return {}
     },
-    methods: {
-
-    },
+    methods: {},
     template: `
      <div>
-        <span>Done Tasks</span>
+        <span class="col-title">Done Tasks</span>
         <note v-for="(note, index) in fourthCol" @save="save()" :fourthCol="fourthCol" :key="note.key" :idNote="index" :note="note">
             
         </note>
@@ -186,6 +174,9 @@ Vue.component('note', {
         },
         reason: {
             type: String
+        },
+        isOverdue: {
+            type: String
         }
     },
     data() {
@@ -193,7 +184,7 @@ Vue.component('note', {
             taskTitle: null,
             isDone: false,
             doneNum: 0,
-            isReason: false
+            isReason: false,
         }
     },
     methods: {
@@ -218,6 +209,17 @@ Vue.component('note', {
         }
     },
     mounted() {
+        let TimeData = new Date();
+        let noteDate = this.note.deadlineDate.split('-');
+        let noteTime = this.note.deadlineTime.split(':');
+        if (this.note.statusCol === 4) {
+            if (noteDate[0] >= TimeData.getFullYear() && noteDate[1] >= Number(TimeData.getMonth() + 1)
+                && noteDate[2] >= TimeData.getDay() && noteTime[0] >= TimeData.getHours() && noteTime[1] >= TimeData.getMinutes()) {
+                this.note.isOverdue = 'Completed on time';
+            } else {
+                this.note.isOverdue = 'Not completed on time';
+            }
+        }
     },
     template: `
     <div class="todo-card todo-item">
@@ -229,6 +231,9 @@ Vue.component('note', {
         </div>
         <div v-if="!isReason" class="reason">
             <span v-if="note.reason">{{ note.reason }}</span>
+        </div>
+        <div class="overdue">
+            <span v-if="note.isOverdue !== ''">{{ note.isOverdue }}</span>
         </div>
         <div class="date" v-if="note.date">
             <span>Date - {{ note.date }}</span>
@@ -325,7 +330,8 @@ Vue.component('create-form', {
             deadlineDate: null,
             deadlineTime: null,
             isDone: null,
-            reason: null
+            reason: null,
+            isOverdue: null
         };
     },
     methods: {
@@ -342,7 +348,8 @@ Vue.component('create-form', {
                     statusCol: 1,
                     reason: null,
                     editDate: null,
-                    editTime: null
+                    editTime: null,
+                    isOverdue: null
                 }
                 eventBus.$emit('on-submit', createNote);
                 this.title = '';
