@@ -63,10 +63,10 @@ Vue.component('container', {
         <create-form v-if="!isEdit"></create-form>
         <edit v-if="isEdit"></edit>
         <div class="container">
-            <column1 class="column column1" :firstCol="firstCol"></column1>
-            <column2 class="column column2" :secondCol="secondCol"></column2>
-            <column3 class="column column3" :thirdCol="thirdCol"></column3>
-            <column4 class="column column4" :fourthCol="fourthCol"></column4>
+            <column1 v-if="!isEdit" class="column column1" :firstCol="firstCol"></column1>
+            <column2 v-if="!isEdit" class="column column2" :secondCol="secondCol"></column2>
+            <column3 v-if="!isEdit" class="column column3" :thirdCol="thirdCol"></column3>
+            <column4 v-if="!isEdit" class="column column4" :fourthCol="fourthCol"></column4>
         </div>
     </div>
     `,
@@ -229,6 +229,9 @@ Vue.component('note', {
         <div>
             <span>{{ note.description }}</span>
         </div>
+        <div class="delete-block">
+            <button v-if="note.statusCol === 1" @click="deleteNote(idNote)">Delete</button>
+        </div>
         <div v-if="!isReason" class="reason">
             <span v-if="note.reason">{{ note.reason }}</span>
         </div>
@@ -249,17 +252,14 @@ Vue.component('note', {
             <span>Date - {{ note.editDate }}</span>
             <span>Time - {{ note.editTime }}</span>
         </div>
+            <button v-if="note.statusCol !== 4 && !isReason" @click="editNote(idNote)" class="edit-btn">Edit</button>
         <div v-if="isReason" class="reason-input">
             <input type="text" v-model="note.reason" placeholder="return reason">
             <button @click="reasonBack(idNote)">Submit</button>
         </div>
-        <div class="delete-block">
-            <button v-if="note.statusCol === 1" @click="deleteNote(idNote)">Delete</button>
-        </div>
         <div class="btns">
-            <button v-if="note.statusCol !== 4 && !isReason" @click="moveNote(idNote)">Move</button>
-            <button v-if="note.statusCol === 3" @click="moveBack(idNote)">Move back</button>
-            <button v-if="note.statusCol !== 4" @click="editNote(idNote)">Edit</button>
+            <button v-if="note.statusCol === 3" @click="moveBack(idNote)" class="arrow-left">&#8592;</button>
+            <button v-if="note.statusCol !== 4 && !isReason" @click="moveNote(idNote)" class="arrow-right">&#8594;</button>
         </div>
     </div>`,
 })

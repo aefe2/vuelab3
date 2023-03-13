@@ -85,7 +85,7 @@ li {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    border: 1px solid #808080;
+    border: 2px solid #808080;
     border-radius: 15px;
     padding: 20px;
     margin: 10px;
@@ -118,25 +118,13 @@ li {
 }
 
 .create-form > input[type="submit"]:hover {
-    background-color: rgba(150, 94, 11, 0.6);
-    transition-duration: .3s;
+    background-color: #3a3a3a;
+    color: white;
+    transition-duration: .5s;
 }
 
 .create-form label {
     color: #7c4e09;
-}
-
-.delete-btn {
-    margin-top: 10px;
-    padding: 5px;
-    border-radius: 20px;
-    border: 1px solid #808080;
-    background-color: whitesmoke;
-}
-
-.delete-btn:hover {
-    color: red;
-    background-color: rgba(199, 197, 197, 0.29);
 }
 
 form > input {
@@ -192,13 +180,11 @@ form > input {
     display: flex;
     align-items: center;
     margin: 5px 10px 5px 5px;
-
 }
 
 .task-title {
     margin: 0 10px 0 0;
     word-break: break-word;
-
 }
 
 .date {
@@ -206,10 +192,10 @@ form > input {
     flex-direction: column;
     align-items: flex-start;
     margin-top: 10px;
-    border: 1px solid grey;
     border-radius: 15px;
     padding: 10px;
     box-shadow: inset rgba(204, 204, 203, 0.25) 0 0 10px;
+    font-size: 14px;
 }
 
 .create-form > span {
@@ -235,18 +221,34 @@ form > input {
     flex-direction: column;
     align-items: flex-start;
     margin-top: 10px;
-    border: 1px solid grey;
-    border-radius: 15px;
     padding: 10px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.delete-block > button {
+    border: none;
+    background: none;
+}
+
+.delete-block > button:hover {
+    cursor: pointer;
+    color: #cc2929;
 }
 
 .form-container {
-    transition-duration: 1s;
     position: fixed;
     z-index: 99;
     width: 100vw;
     height: 100vh;
-    background-color: white;
+}
+
+.edit-form > label:first-child {
+    font-weight: 500;
+    border-bottom: 2px solid;
+    padding: 2px;
+    width: 100px;
+    text-align: center;
 }
 
 .edit-form > label {
@@ -260,4 +262,55 @@ form > input {
     left: 50%;
     top: 40%;
     transform: translate(-50%, -50%);
+}
+
+.btns {
+    display: flex;
+}
+
+.arrow-right {
+    margin-left: auto;
+}
+
+.edit-btn {
+    align-self: end;
+    margin-top: 10px;
+    padding: 5px;
+    border-radius: 20px;
+    border: 1px solid #808080;
+    background-color: whitesmoke;
+}
+
+.edit-btn:hover {
+    background-color: #3a3a3a;
+    color: white;
+    transition-duration: .5s;
+}
+
+.reason-input {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.reason-input > input {
+    padding: 3px;
+    border-radius: 20px;
+    border: 1px solid #808080;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.reason-input > button {
+    margin-top: 3px;
+    padding: 3px;
+    border-radius: 20px;
+    border: 1px solid #808080;
+    background-color: whitesmoke;
+}
+
+.reason-input > button:hover {
+    background-color: #3a3a3a;
+    color: white;
+    transition-duration: .5s;
 }
