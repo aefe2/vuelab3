@@ -231,30 +231,31 @@ Vue.component('note', {
         <div class="todo-title">
             <span>{{ note.title }}</span>
         </div>
-        <div>
+        <div class="todo-description">
             <span>{{ note.description }}</span>
-        </div>
-        <div class="delete-block">
-            <button v-if="note.statusCol === 1" @click="deleteNote(idNote)">Delete</button>
         </div>
         <div v-if="!isReason" class="reason">
             <span v-if="note.reason">{{ note.reason }}</span>
         </div>
+        <div class="todo-btns">
+            <button v-if="note.statusCol !== 4 && !isReason" @click="editNote(idNote)" class="edit-btn">Edit</button>
+            <button v-if="note.statusCol === 1" @click="deleteNote(idNote)" class="delete-btn">Delete</button>
+        </div>
         <div class="date" v-if="note.date">
-            <span>Date - {{ note.date }}</span>
-            <span>Time - {{ note.time }}</span>
+            <span>Created at</span>
+            <span>{{ note.date }}</span>
+            <span>{{ note.time }}</span>
         </div>
         <div class="deadline">
             <span>Deadline:</span>
-            <span>Date - {{ note.deadlineDate }}</span>
-            <span>Time - {{ note.deadlineTime }}</span>
+            <span>{{ note.deadlineDate }}</span>
+            <span>{{ note.deadlineTime }}</span>
         </div>
         <div v-if="note.editDate" class="deadline">
             <span>Last edit:</span>
-            <span>Date - {{ note.editDate }}</span>
-            <span>Time - {{ note.editTime }}</span>
+            <span>{{ note.editDate }}</span>
+            <span>{{ note.editTime }}</span>
         </div>
-            <button v-if="note.statusCol !== 4 && !isReason" @click="editNote(idNote)" class="edit-btn">Edit</button>
         <div v-if="isReason" class="reason-input">
             <input type="text" v-model="note.reason" placeholder="return reason">
             <button @click="reasonBack(idNote)">Submit</button>

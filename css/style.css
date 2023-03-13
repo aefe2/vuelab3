@@ -49,7 +49,7 @@ body {
     box-shadow: inset rgba(0, 0, 0, 0.2);
     border-radius: 30px;
     min-width: 100px;
-    max-width: 300px;
+    max-width: 250px;
     margin-bottom: 20px;
 }
 
@@ -86,9 +86,11 @@ li {
     flex-direction: column;
     align-items: flex-start;
     border: 2px solid #808080;
-    border-radius: 15px;
+    border-radius: 20px;
     padding: 20px;
     margin: 10px;
+    min-width: 100px;
+    max-width: 200px;
 }
 
 .create-form {
@@ -141,6 +143,10 @@ form > input {
     font-weight: 600;
 }
 
+.todo-description {
+    word-break: break-word;
+}
+
 .todo-tasks {
     display: flex;
     flex-direction: column;
@@ -190,11 +196,8 @@ form > input {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-top: 10px;
-    border-radius: 15px;
-    padding: 10px;
-    box-shadow: inset rgba(204, 204, 203, 0.25) 0 0 10px;
     font-size: 14px;
+    margin-top: 10px;
 }
 
 .create-form > span {
@@ -219,21 +222,24 @@ form > input {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-top: 10px;
-    padding: 10px;
     font-size: 14px;
     font-weight: 500;
+    margin-top: 10px;
 }
 
-.delete-block > button {
+.delete-btn {
     border: none;
     background: none;
+    margin-top: 10px;
+    color: rgba(204, 41, 41, 0.6);
 }
 
-.delete-block > button:hover {
+.delete-btn:hover {
+    transition-duration: .3s;
     cursor: pointer;
     color: #cc2929;
 }
+
 
 .form-container {
     position: fixed;
@@ -264,26 +270,47 @@ form > input {
 }
 
 .btns {
-    display: flex;
+    display: grid;
+    grid-template-columns: 50px 50px;
 }
 
 .arrow-right {
-    margin-left: auto;
+    border: none;
+    background: none;
+    font-size: 25px;
+    color: #3a3a3a;
+    cursor: pointer;
+}
+
+.arrow-left {
+    border: none;
+    background: none;
+    font-size: 25px;
+    color: #3a3a3a;
+    cursor: pointer;
 }
 
 .edit-btn {
-    align-self: end;
     margin-top: 10px;
     padding: 5px;
-    border-radius: 20px;
-    border: 1px solid #808080;
-    background-color: whitesmoke;
+
+    border: none;
+    background: none;
 }
 
 .edit-btn:hover {
-    background-color: #3a3a3a;
-    color: white;
+    color: #7c4e09;
     transition-duration: .5s;
+}
+
+.reason {
+    margin-top: 5px;
+}
+
+.reason:before {
+    content: "reason - ";
+    color: #7c4e09;
+    font-weight: 500;
 }
 
 .reason-input {
@@ -291,10 +318,11 @@ form > input {
     flex-wrap: wrap;
     flex-direction: column;
     align-items: flex-end;
+    margin-top: 10px;
 }
 
 .reason-input > input {
-    padding: 3px;
+    padding: 4px;
     border-radius: 20px;
     border: 1px solid #808080;
     background-color: rgba(255, 255, 255, 0.7);
@@ -302,7 +330,7 @@ form > input {
 
 .reason-input > button {
     margin-top: 3px;
-    padding: 3px;
+    padding: 4px;
     border-radius: 20px;
     border: 1px solid #808080;
     background-color: whitesmoke;
@@ -313,11 +341,17 @@ form > input {
     color: white;
     transition-duration: .5s;
 }
+
 .on-time {
     color: green;
     border-bottom: 1px solid green;
 }
+
 .not-on-time {
     color: #cc2929;
     border-bottom: 1px solid #cc2929;
+}
+
+.overdue {
+    margin-top: 10px;
 }
