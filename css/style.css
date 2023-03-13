@@ -137,7 +137,6 @@ form > input {
 
 .todo-title {
     color: #7c4e09;
-    text-decoration: underline;
     word-break: break-word;
     font-weight: 600;
 }
@@ -313,4 +312,12 @@ form > input {
     background-color: #3a3a3a;
     color: white;
     transition-duration: .5s;
+}
+.on-time {
+    color: green;
+    border-bottom: 1px solid green;
+}
+.not-on-time {
+    color: #cc2929;
+    border-bottom: 1px solid #cc2929;
 }

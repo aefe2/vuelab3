@@ -177,6 +177,9 @@ Vue.component('note', {
         },
         isOverdue: {
             type: String
+        },
+        timeCheck: {
+            type: Boolean
         }
     },
     data() {
@@ -216,8 +219,10 @@ Vue.component('note', {
             if (noteDate[0] >= TimeData.getFullYear() && noteDate[1] >= Number(TimeData.getMonth() + 1)
                 && noteDate[2] >= TimeData.getDay() && noteTime[0] >= TimeData.getHours() && noteTime[1] >= TimeData.getMinutes()) {
                 this.note.isOverdue = 'Completed on time';
+                this.note.timeCheck = true;
             } else {
                 this.note.isOverdue = 'Not completed on time';
+                this.note.timeCheck = false;
             }
         }
     },
@@ -234,9 +239,6 @@ Vue.component('note', {
         </div>
         <div v-if="!isReason" class="reason">
             <span v-if="note.reason">{{ note.reason }}</span>
-        </div>
-        <div class="overdue">
-            <span v-if="note.isOverdue !== ''">{{ note.isOverdue }}</span>
         </div>
         <div class="date" v-if="note.date">
             <span>Date - {{ note.date }}</span>
@@ -260,6 +262,9 @@ Vue.component('note', {
         <div class="btns">
             <button v-if="note.statusCol === 3" @click="moveBack(idNote)" class="arrow-left">&#8592;</button>
             <button v-if="note.statusCol !== 4 && !isReason" @click="moveNote(idNote)" class="arrow-right">&#8594;</button>
+        </div>
+        <div class="overdue">
+            <div v-if="note.isOverdue !== ''"><span :class="{'on-time':note.timeCheck, 'not-on-time':!note.timeCheck}">{{ note.isOverdue }}</span></div>
         </div>
     </div>`,
 })
@@ -331,7 +336,8 @@ Vue.component('create-form', {
             deadlineTime: null,
             isDone: null,
             reason: null,
-            isOverdue: null
+            isOverdue: null,
+            timeCheck: null
         };
     },
     methods: {
@@ -349,7 +355,8 @@ Vue.component('create-form', {
                     reason: null,
                     editDate: null,
                     editTime: null,
-                    isOverdue: null
+                    isOverdue: null,
+                    timeCheck: null
                 }
                 eventBus.$emit('on-submit', createNote);
                 this.title = '';
