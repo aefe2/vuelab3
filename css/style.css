@@ -308,7 +308,6 @@ form > input {
 }
 
 .reason:before {
-    content: "reason - ";
     color: #7c4e09;
     font-weight: 500;
 }

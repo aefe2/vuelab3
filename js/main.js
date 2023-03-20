@@ -25,8 +25,9 @@ Vue.component('container', {
             }
         });
         eventBus.$on('move-back', (idNote) => {
+            this.thirdCol[idNote].reasons.push(this.thirdCol[idNote].reasonBuff);
             this.secondCol.push(this.thirdCol[idNote])
-            this.thirdCol.splice(idNote, 1)
+            this.thirdCol.splice(idNote, 1);
         })
         eventBus.$on('edit-note', (idNote, buffStatus) => {
             this.isEdit = true;
@@ -172,6 +173,9 @@ Vue.component('note', {
         idNote: {
             type: Number,
         },
+        reasons: {
+            type: Array,
+        },
         reason: {
             type: String
         },
@@ -205,6 +209,7 @@ Vue.component('note', {
             let buffStatus = this.note.statusCol--
             this.isReason = false
             eventBus.$emit('move-back', idNote, buffStatus)
+            this.note.reasonBuff = '';
         },
         editNote(idNote) {
             let buffStatus = this.note.statusCol;
@@ -213,8 +218,8 @@ Vue.component('note', {
     },
     mounted() {
         let TimeData = new Date();
-        let noteDate = this.note.deadlineDate.split('-');
-        let noteTime = this.note.deadlineTime.split(':');
+        let noteDate = this.note.deadlineDate;
+        let noteTime = this.note.deadlineTime;
         if (this.note.statusCol === 4) {
             if (noteDate[0] >= TimeData.getFullYear() && noteDate[1] >= Number(TimeData.getMonth() + 1)
                 && noteDate[2] >= TimeData.getDay() && noteTime[0] >= TimeData.getHours() && noteTime[1] >= TimeData.getMinutes()) {
@@ -235,7 +240,8 @@ Vue.component('note', {
             <span>{{ note.description }}</span>
         </div>
         <div v-if="!isReason" class="reason">
-            <span v-if="note.reason">{{ note.reason }}</span>
+<!--        v-if="note.reason" v-for="(reason, index) in reasons" :index="reason.key"-->
+            <li v-for="(reason, index) of note.reasons" :index="reason.key">reason - {{ reason }}</li>
         </div>
         <div class="todo-btns">
             <button v-if="note.statusCol !== 4 && !isReason" @click="editNote(idNote)" class="edit-btn">Edit</button>
@@ -257,7 +263,7 @@ Vue.component('note', {
             <span>{{ note.editTime }}</span>
         </div>
         <div v-if="isReason" class="reason-input">
-            <input type="text" v-model="note.reason" placeholder="return reason">
+            <input type="text" v-model="note.reasonBuff" placeholder="return reason">
             <button @click="reasonBack(idNote)">Submit</button>
         </div>
         <div class="btns">
@@ -336,9 +342,10 @@ Vue.component('create-form', {
             deadlineDate: null,
             deadlineTime: null,
             isDone: null,
-            reason: null,
+            reasons: [],
             isOverdue: null,
-            timeCheck: null
+            timeCheck: null,
+            reasonBuff: null
         };
     },
     methods: {
@@ -353,11 +360,12 @@ Vue.component('create-form', {
                     deadlineTime: this.deadlineTime,
                     deadlineDate: this.deadlineDate,
                     statusCol: 1,
-                    reason: null,
+                    reasons: [],
                     editDate: null,
                     editTime: null,
                     isOverdue: null,
-                    timeCheck: null
+                    timeCheck: null,
+                    reasonBuff: null
                 }
                 eventBus.$emit('on-submit', createNote);
                 this.title = '';
@@ -370,12 +378,12 @@ Vue.component('create-form', {
     template: `
     <form class="create-form" @submit.prevent="onSubmit">
         <label>Create Todo</label>
-        <input v-model="title" type="text" placeholder="title">
-        <input v-model="description" type="text" placeholder="description">
+        <input v-model.trim="title" type="text" placeholder="title">
+        <input v-model.trim="description" type="text" placeholder="description">
         <label>Deadline</label>
         <div class="date-input">
-            <input type="date" v-model="deadlineDate">
-            <input type="time" v-model="deadlineTime">
+            <input type="date" v-model="deadlineDate" required>
+            <input type="time" v-model="deadlineTime" required>
         </div>
         <input type="submit" value="Create">
     </form>
